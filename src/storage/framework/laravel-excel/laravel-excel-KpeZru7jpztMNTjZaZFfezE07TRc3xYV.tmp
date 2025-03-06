@@ -1,0 +1,6 @@
+name,email,gender,employee_id,department,designation,employment_status,roles,salary,joining_date,pme_barcode,gate_passes,skills
+ALEEM ZADA SHAHIB,556@sds.com,male,660,Main Department,Construction Worker,permanent,Employee,10000,,20211040,CICPA OFFSHORE(#20195),torcher
+ASMAT ULLAH,557@sds.com,male,659,Main Department,Construction Worker,permanent,Employee,10000,,20211015,CICPA OFFSHORE(#20195),"torcher, welder"
+UMARA MUHAMAZA,559@sds.com,male,923,Main Department,Construction Worker,permanent,Employee,10000,,20211056,CICPA OFFSHORE(#20195),torcher
+ABDUL KASEM,560@sds.com,male,1062,Main Department,Construction Worker,permanent,Employee,10000,,20211079,CICPA OFFSHORE(#20195),welder
+TAHIR NASEEM NASEEM AHMED,561@sds.com,male,826,Main Department,Construction Worker,permanent,Employee,10000,,20211054,CICPA OFFSHORE(#20195),"torcher, welder"
