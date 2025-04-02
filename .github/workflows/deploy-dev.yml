@@ -3,6 +3,8 @@ name: Deploy to FTP
 on:
   push:
     branches:
+      - dev
+      - stg
       - main
 
   workflow_dispatch:
