@@ -1,0 +1,25 @@
+name: Deploy to FTP
+
+on:
+  push:
+    branches:
+      - main # Change this if you deploy from another branch (e.g., "deploy" or "production")
+      - dev
+
+jobs:
+  ftp-deploy:
+    name: Deploy via FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to FTP Server
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./ # Directory in your repo to deploy
+          server-dir: /public_html/ # Remote server directory
