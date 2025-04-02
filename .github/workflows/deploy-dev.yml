@@ -5,6 +5,18 @@ on:
     branches:
       - main # Change this if your deployment branch is different
 
+  workflow_dispatch: # Enables manual trigger
+    inputs:
+      environment:
+        description: "Select deployment environment"
+        required: true
+        default: "production"
+        type: choice
+        options:
+          - dev
+          - stg
+          - main
+
 jobs:
   ftp-deploy:
     name: Deploy via FTP
