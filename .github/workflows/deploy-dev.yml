@@ -1,6 +1,10 @@
 name: Deploy to FTP
 
 on:
+  push:
+    branches:
+      - main
+
   workflow_dispatch:
     inputs:
       environment:
@@ -38,4 +42,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./ # Change if needed
-          server-dir: public_html # Upload to selected environment folder
+          server-dir: ${{ env.FTP_DIR }} # Upload to selected environment folder
