@@ -3,8 +3,7 @@ name: Deploy to FTP
 on:
   push:
     branches:
-      - main # Change this if you deploy from another branch (e.g., "deploy" or "production")
-      - dev
+      - main # Change this if your deployment branch is different
 
 jobs:
   ftp-deploy:
@@ -16,10 +15,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy to FTP Server
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4 # Specify the latest version
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./ # Directory in your repo to deploy
-          server-dir: /public_html/ # Remote server directory
+          local-dir: ./ # Change if needed
+          server-dir: /public_html/ # Change to your server path
