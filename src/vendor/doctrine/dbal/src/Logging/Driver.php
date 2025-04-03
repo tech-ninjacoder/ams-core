@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace Doctrine\DBAL\Logging;
 
+use Doctrine\DBAL\Connection as DBALConnection;
 use Doctrine\DBAL\Driver as DriverInterface;
-use Doctrine\DBAL\Driver\Middleware\AbstractDriverMiddleware;
+use Doctrine\DBAL\Driver\API\ExceptionConverter;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Psr\Log\LoggerInterface;
 
-final class Driver extends AbstractDriverMiddleware
+final class Driver implements VersionAwarePlatformDriver
 {
+    /** @var DriverInterface */
+    private $driver;
+
     /** @var LoggerInterface */
     private $logger;
 
@@ -18,8 +24,7 @@ final class Driver extends AbstractDriverMiddleware
      */
     public function __construct(DriverInterface $driver, LoggerInterface $logger)
     {
-        parent::__construct($driver);
-
+        $this->driver = $driver;
         $this->logger = $logger;
     }
 
@@ -31,9 +36,42 @@ final class Driver extends AbstractDriverMiddleware
         $this->logger->info('Connecting with parameters {params}', ['params' => $this->maskPassword($params)]);
 
         return new Connection(
-            parent::connect($params),
+            $this->driver->connect($params),
             $this->logger
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDatabasePlatform()
+    {
+        return $this->driver->getDatabasePlatform();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSchemaManager(DBALConnection $conn, AbstractPlatform $platform)
+    {
+        return $this->driver->getSchemaManager($conn, $platform);
+    }
+
+    public function getExceptionConverter(): ExceptionConverter
+    {
+        return $this->driver->getExceptionConverter();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function createDatabasePlatformForVersion($version)
+    {
+        if ($this->driver instanceof VersionAwarePlatformDriver) {
+            return $this->driver->createDatabasePlatformForVersion($version);
+        }
+
+        return $this->driver->getDatabasePlatform();
     }
 
     /**

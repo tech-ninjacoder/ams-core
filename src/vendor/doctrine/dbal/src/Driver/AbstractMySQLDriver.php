@@ -6,7 +6,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\API\ExceptionConverter;
 use Doctrine\DBAL\Driver\API\MySQL;
 use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MariaDb1027Platform;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
@@ -14,7 +13,6 @@ use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\VersionAwarePlatformDriver;
-use Doctrine\Deprecations\Deprecation;
 
 use function assert;
 use function preg_match;
@@ -48,13 +46,6 @@ abstract class AbstractMySQLDriver implements VersionAwarePlatformDriver
                 return new MySQL57Platform();
             }
         }
-
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/5060',
-            'MySQL 5.6 support is deprecated and will be removed in DBAL 4.'
-                . ' Consider upgrading to MySQL 5.7 or later.'
-        );
 
         return $this->getDatabasePlatform();
     }
@@ -122,7 +113,7 @@ abstract class AbstractMySQLDriver implements VersionAwarePlatformDriver
     /**
      * {@inheritdoc}
      *
-     * @return AbstractMySQLPlatform
+     * @return MySQLPlatform
      */
     public function getDatabasePlatform()
     {
@@ -136,7 +127,7 @@ abstract class AbstractMySQLDriver implements VersionAwarePlatformDriver
      */
     public function getSchemaManager(Connection $conn, AbstractPlatform $platform)
     {
-        assert($platform instanceof AbstractMySQLPlatform);
+        assert($platform instanceof MySQLPlatform);
 
         return new MySQLSchemaManager($conn, $platform);
     }

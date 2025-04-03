@@ -1299,8 +1299,6 @@ abstract class AbstractSchemaManager
      * Given a table comment this method tries to extract a typehint for Doctrine Type, or returns
      * the type given as default.
      *
-     * @internal This method should be only used from within the AbstractSchemaManager class hierarchy.
-     *
      * @param string|null $comment
      * @param string      $currentType
      *
@@ -1316,8 +1314,6 @@ abstract class AbstractSchemaManager
     }
 
     /**
-     * @internal This method should be only used from within the AbstractSchemaManager class hierarchy.
-     *
      * @param string|null $comment
      * @param string|null $type
      *

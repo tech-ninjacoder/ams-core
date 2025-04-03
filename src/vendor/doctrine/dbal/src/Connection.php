@@ -24,7 +24,6 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\SQL\Parser;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Deprecations\Deprecation;
-use LogicException;
 use Throwable;
 use Traversable;
 
@@ -35,8 +34,6 @@ use function implode;
 use function is_int;
 use function is_string;
 use function key;
-use function method_exists;
-use function sprintf;
 
 /**
  * A database abstraction-level connection that implements features like events, transaction isolation levels,
@@ -56,11 +53,6 @@ class Connection
      * Represents an array of strings to be expanded by Doctrine SQL parsing.
      */
     public const PARAM_STR_ARRAY = ParameterType::STRING + self::ARRAY_PARAM_OFFSET;
-
-    /**
-     * Represents an array of ascii strings to be expanded by Doctrine SQL parsing.
-     */
-    public const PARAM_ASCII_STR_ARRAY = ParameterType::ASCII + self::ARRAY_PARAM_OFFSET;
 
     /**
      * Offset by which PARAM_* constants are detected as arrays of the param type.
@@ -119,6 +111,7 @@ class Connection
      * The parameters used during creation of the Connection instance.
      *
      * @var array<string,mixed>
+     * @phpstan-var array<string,mixed>
      * @psalm-var Params
      */
     private $params;
@@ -214,6 +207,7 @@ class Connection
      *
      * @return array<string,mixed>
      * @psalm-return Params
+     * @phpstan-return array<string,mixed>
      */
     public function getParams()
     {
@@ -317,8 +311,6 @@ class Connection
     /**
      * Establishes the connection with the database.
      *
-     * @internal This method will be made protected in DBAL 4.0.
-     *
      * @return bool TRUE if the connection was successfully established, FALSE if
      *              the connection is already open.
      *
@@ -326,12 +318,6 @@ class Connection
      */
     public function connect()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4966',
-            'Public access to Connection::connect() is deprecated.'
-        );
-
         if ($this->_conn !== null) {
             return false;
         }
@@ -538,7 +524,7 @@ class Connection
      * @param list<mixed>|array<string, mixed>                                     $params Query parameters
      * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
-     * @return list<mixed>|false False is returned if no rows are found.
+     * @return list< mixed>|false False is returned if no rows are found.
      *
      * @throws Exception
      */
@@ -623,7 +609,7 @@ class Connection
      * @param array<string, mixed>                                                 $criteria Deletion criteria
      * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types    Parameter types
      *
-     * @return int|string The number of affected rows.
+     * @return int The number of affected rows.
      *
      * @throws Exception
      */
@@ -660,7 +646,7 @@ class Connection
      *
      * @param int $level The level to set.
      *
-     * @return int|string
+     * @return int
      *
      * @throws Exception
      */
@@ -697,7 +683,7 @@ class Connection
      * @param array<string, mixed>                                                 $criteria Update criteria
      * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types    Parameter types
      *
-     * @return int|string The number of affected rows.
+     * @return int The number of affected rows.
      *
      * @throws Exception
      */
@@ -732,7 +718,7 @@ class Connection
      * @param array<string, mixed>                                                 $data  Column-value pairs
      * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types Parameter types
      *
-     * @return int|string The number of affected rows.
+     * @return int The number of affected rows.
      *
      * @throws Exception
      */
@@ -1125,7 +1111,7 @@ class Connection
      * @param list<mixed>|array<string, mixed>                                     $params Statement parameters
      * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
      *
-     * @return int|string The number of affected rows.
+     * @return int The number of affected rows.
      *
      * @throws Exception
      */
@@ -1512,44 +1498,17 @@ class Connection
     /**
      * Gets the wrapped driver connection.
      *
-     * @deprecated Use {@link getNativeConnection()} to access the native connection.
-     *
      * @return DriverConnection
      *
      * @throws Exception
      */
     public function getWrappedConnection()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4966',
-            'Connection::getWrappedConnection() is deprecated.'
-                . ' Use Connection::getNativeConnection() to access the native connection.'
-        );
-
         $this->connect();
 
         assert($this->_conn !== null);
 
         return $this->_conn;
-    }
-
-    /**
-     * @return resource|object
-     */
-    public function getNativeConnection()
-    {
-        $this->connect();
-
-        assert($this->_conn !== null);
-        if (! method_exists($this->_conn, 'getNativeConnection')) {
-            throw new LogicException(sprintf(
-                'The driver connection %s does not support accessing the native connection.',
-                get_class($this->_conn)
-            ));
-        }
-
-        return $this->_conn->getNativeConnection();
     }
 
     /**
@@ -1790,11 +1749,7 @@ class Connection
         }
 
         foreach ($types as $type) {
-            if (
-                $type === self::PARAM_INT_ARRAY
-                || $type === self::PARAM_STR_ARRAY
-                || $type === self::PARAM_ASCII_STR_ARRAY
-            ) {
+            if ($type === self::PARAM_INT_ARRAY || $type === self::PARAM_STR_ARRAY) {
                 return true;
             }
         }

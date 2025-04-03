@@ -205,17 +205,9 @@ class SqlitePlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
-     *
-     * @deprecated
      */
     public function prefersIdentityColumns()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pulls/1519',
-            'SqlitePlatform::prefersIdentityColumns() is deprecated.'
-        );
-
         return true;
     }
 

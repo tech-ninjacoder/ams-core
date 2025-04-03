@@ -68,38 +68,33 @@ class Inline extends AbstractFrameDecorator
         $this->revert_counter_increment();
         $node = $this->_frame->get_node();
         $split = $this->copy($node->cloneNode());
-
-        $style = $this->_frame->get_style();
-        $split_style = $split->get_original_style();
+        // if this is a generated node don't propagate the content style
+        if ($split->get_node()->nodeName == "dompdf_generated") {
+            $split->get_style()->content = "normal";
+        }
+        $this->get_parent()->insert_child_after($split, $this);
 
         // Unset the current node's right style properties
+        $style = $this->_frame->get_style();
         $style->margin_right = 0;
         $style->padding_right = 0;
         $style->border_right_width = 0;
 
         // Unset the split node's left style properties since we don't want them
         // to propagate
-        $split_style->margin_left = 0;
-        $split_style->padding_left = 0;
-        $split_style->border_left_width = 0;
-
-        // If this is a generated node don't propagate the content style
-        if ($split->get_node()->nodeName == "dompdf_generated") {
-            $split_style->content = "normal";
-        }
+        $style = $split->get_style();
+        $style->margin_left = 0;
+        $style->padding_left = 0;
+        $style->border_left_width = 0;
 
         //On continuation of inline element on next line,
-        //don't repeat non-horizontally repeatable background images
+        //don't repeat non-vertically repeatable background images
         //See e.g. in testcase image_variants, long descriptions
-        if (($url = $split->get_style()->background_image) && $url !== "none"
-            && ($repeat = $split->get_style()->background_repeat) && $repeat !== "repeat" && $repeat !== "repeat-x"
+        if (($url = $style->background_image) && $url !== "none"
+            && ($repeat = $style->background_repeat) && $repeat !== "repeat" && $repeat !== "repeat-y"
         ) {
-            $split_style->background_image = "none";
+            $style->background_image = "none";
         }
-
-        $split->set_style(clone $split_style);
-
-        $this->get_parent()->insert_child_after($split, $this);
 
         // Add $child and all following siblings to the new split node
         $iter = $child;

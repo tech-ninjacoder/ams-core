@@ -2,14 +2,12 @@
 
 namespace Doctrine\DBAL\Tools\Console;
 
-use Composer\InstalledVersions;
 use Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand;
 use Doctrine\DBAL\Tools\Console\Command\RunSqlCommand;
 use Exception;
+use PackageVersions\Versions;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
-
-use function assert;
 
 /**
  * Handles running the Console Tools inside Symfony Console context.
@@ -27,10 +25,7 @@ class ConsoleRunner
      */
     public static function run(ConnectionProvider $connectionProvider, $commands = [])
     {
-        $version = InstalledVersions::getVersion('doctrine/dbal');
-        assert($version !== null);
-
-        $cli = new Application('Doctrine Command Line Interface', $version);
+        $cli = new Application('Doctrine Command Line Interface', Versions::getVersion('doctrine/dbal'));
 
         $cli->setCatchExceptions(true);
         self::addCommands($cli, $connectionProvider);
@@ -51,8 +46,6 @@ class ConsoleRunner
 
     /**
      * Prints the instructions to create a configuration file
-     *
-     * @deprecated This method will be removed without replacement.
      *
      * @return void
      */

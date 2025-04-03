@@ -156,6 +156,14 @@ class Dompdf
     private $protocol = "";
 
     /**
+     * HTTP context created with stream_context_create()
+     * Will be used for file_get_contents
+     *
+     * @var resource
+     */
+    private $httpContext;
+
+    /**
      * The system's locale
      *
      * @var string
@@ -392,7 +400,7 @@ class Dompdf
             $uri = $realfile;
         }
 
-        [$contents, $http_response_header] = Helpers::getFileContent($uri, $this->options->getHttpContext());
+        [$contents, $http_response_header] = Helpers::getFileContent($uri, $this->httpContext);
         if ($contents === null) {
             throw new Exception("File '$file' not found.");
         }
@@ -1236,12 +1244,12 @@ class Dompdf
     /**
      * Sets the HTTP context
      *
-     * @param resource|array $httpContext
+     * @param resource $httpContext
      * @return $this
      */
     public function setHttpContext($httpContext)
     {
-        $this->options->setHttpContext($httpContext);
+        $this->httpContext = $httpContext;
         return $this;
     }
 
@@ -1261,7 +1269,7 @@ class Dompdf
      */
     public function getHttpContext()
     {
-        return $this->options->getHttpContext();
+        return $this->httpContext;
     }
 
     /**
@@ -1355,11 +1363,6 @@ class Dompdf
      */
     public function setOptions(Options $options)
     {
-        // For backwards compatibility
-        if ($this->options && $this->options->getHttpContext() && !$options->getHttpContext()) {
-            $options->setHttpContext($this->options->getHttpContext());
-        }
-
         $this->options = $options;
         $fontMetrics = $this->getFontMetrics();
         if (isset($fontMetrics)) {
