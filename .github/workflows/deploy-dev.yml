@@ -44,4 +44,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./ # Change if needed
-          server-dir: ${{ env.FTP_DIR }} # Upload to selected environment folder
+          server-dir: ./ # Upload to selected environment folder
