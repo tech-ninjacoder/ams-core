@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Doctrine\DBAL\Logging;
 
-use Doctrine\DBAL\Driver\Middleware\AbstractStatementMiddleware;
 use Doctrine\DBAL\Driver\Result as ResultInterface;
 use Doctrine\DBAL\Driver\Statement as StatementInterface;
 use Doctrine\DBAL\ParameterType;
@@ -13,8 +12,11 @@ use Psr\Log\LoggerInterface;
 use function array_slice;
 use function func_get_args;
 
-final class Statement extends AbstractStatementMiddleware
+final class Statement implements StatementInterface
 {
+    /** @var StatementInterface */
+    private $statement;
+
     /** @var LoggerInterface */
     private $logger;
 
@@ -32,10 +34,9 @@ final class Statement extends AbstractStatementMiddleware
      */
     public function __construct(StatementInterface $statement, LoggerInterface $logger, string $sql)
     {
-        parent::__construct($statement);
-
-        $this->logger = $logger;
-        $this->sql    = $sql;
+        $this->statement = $statement;
+        $this->logger    = $logger;
+        $this->sql       = $sql;
     }
 
     /**
@@ -46,7 +47,7 @@ final class Statement extends AbstractStatementMiddleware
         $this->params[$param] = &$variable;
         $this->types[$param]  = $type;
 
-        return parent::bindParam($param, $variable, $type, ...array_slice(func_get_args(), 3));
+        return $this->statement->bindParam($param, $variable, $type, ...array_slice(func_get_args(), 3));
     }
 
     /**
@@ -57,7 +58,7 @@ final class Statement extends AbstractStatementMiddleware
         $this->params[$param] = $value;
         $this->types[$param]  = $type;
 
-        return parent::bindValue($param, $value, $type);
+        return $this->statement->bindValue($param, $value, $type);
     }
 
     /**
@@ -71,6 +72,6 @@ final class Statement extends AbstractStatementMiddleware
             'types'  => $this->types,
         ]);
 
-        return parent::execute($params);
+        return $this->statement->execute($params);
     }
 }

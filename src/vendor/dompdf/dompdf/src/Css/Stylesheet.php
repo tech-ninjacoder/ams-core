@@ -579,7 +579,8 @@ class Stylesheet
                     // This doesn't work because libxml only supports XPath 1.0...
                     //$query .= "[matches(@$attr,\"^${tok}\$|^${tok}[ ]+|[ ]+${tok}\$|[ ]+${tok}[ ]+\")]";
 
-                    $query .= "[contains(concat(' ', normalize-space(@$attr), ' '), concat(' ', '$tok', ' '))]";
+                    // Query improvement by Michael Sheakoski <michael@mjsdigital.com>:
+                    $query .= "[contains(concat(' ', @$attr, ' '), concat(' ', '$tok', ' '))]";
                     $tok = "";
                     break;
 
@@ -856,7 +857,7 @@ class Stylesheet
                             // (e.g. [type~="a b c" "d e f"])
                             // FIXME: Don't match anything if value contains
                             // whitespace or is the empty string
-                            $query .= "[contains(concat(' ', normalize-space(@$attr), ' '), concat(' ', '$value', ' '))]";
+                            $query .= "[contains(concat(' ', @$attr, ' '), concat(' ', '$value', ' '))]";
                             break;
 
                         case "|=":
@@ -1094,7 +1095,10 @@ class Stylesheet
             // Styles can only be applied directly to DOMElements; anonymous
             // frames inherit from their parent
             if ($frame->get_node()->nodeType !== XML_ELEMENT_NODE) {
-                $style->inherit($p ? $p->get_style() : null);
+                if ($p) {
+                    $style->inherit($p->get_style());
+                }
+
                 $frame->set_style($style);
                 continue;
             }
@@ -1205,14 +1209,15 @@ class Stylesheet
                 }
             }
 
-            // Handle inheritance
-            if ($p && $DEBUGCSS) {
-                print "  inherit [\n";
-                $p->get_style()->debug_print();
-                print "  ]\n";
+            // Inherit parent's styles if parent exists
+            if ($p) {
+                if ($DEBUGCSS) {
+                    print "  inherit [\n";
+                    $p->get_style()->debug_print();
+                    print "  ]\n";
+                }
+                $style->inherit($p->get_style());
             }
-
-            $style->inherit($p ? $p->get_style() : null);
 
             if ($DEBUGCSS) {
                 print "  DomElementStyle [\n";

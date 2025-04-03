@@ -329,7 +329,7 @@ class QueryBuilder
      *
      * @deprecated Use {@see executeQuery()} or {@see executeStatement()} instead.
      *
-     * @return Result|int|string
+     * @return Result|int
      *
      * @throws Exception
      */

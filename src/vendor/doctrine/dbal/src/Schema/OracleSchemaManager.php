@@ -330,8 +330,7 @@ class OracleSchemaManager extends AbstractSchemaManager
         $tableOptions = $this->_conn->fetchAssociative($sql);
 
         if ($tableOptions !== false) {
-            $tableOptions = array_change_key_case($tableOptions, CASE_LOWER);
-            $table->addOption('comment', $tableOptions['comments']);
+            $table->addOption('comment', $tableOptions['COMMENTS']);
         }
 
         return $table;
