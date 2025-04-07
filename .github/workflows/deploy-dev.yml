@@ -18,6 +18,7 @@ on:
 jobs:
   ftp-deploy:
     name: Deploy AMS dev via FTP
+    environment: dev
     runs-on: ubuntu-latest
 
     steps:
