@@ -1,4 +1,4 @@
-name: Deploy to FTP
+name: Deploy to dev FTP
 
 on:
   push:
@@ -14,8 +14,6 @@ on:
         type: choice
         options:
           - dev
-          - stg
-          - main
 
 jobs:
   ftp-deploy:
