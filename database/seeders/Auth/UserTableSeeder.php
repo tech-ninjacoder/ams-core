@@ -27,7 +27,7 @@ class UserTableSeeder extends Seeder
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email' => 'admin@demo.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('LetmeinDB@2025!'),
             'status_id' => Status::findByNameAndType('status_active', 'user')->id,
             'is_in_employee' => 1,
         ]);
