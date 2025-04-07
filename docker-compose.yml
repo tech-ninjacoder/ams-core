@@ -1,0 +1,34 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www # ✅ Make sure this line exists # Syncs code changes
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - laravel
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: admin_ams_core_local
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - laravel
+
+volumes:
+  db_data:
+
+networks:
+  laravel:

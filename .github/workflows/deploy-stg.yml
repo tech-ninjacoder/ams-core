@@ -1,0 +1,43 @@
+name: Deploy to FTP
+
+on:
+  push:
+    branches:
+      - stg
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select deployment environment"
+        required: true
+        default: "stg"
+        type: choice
+        options:
+          - stg
+
+jobs:
+  ftp-deploy:
+    name: Deploy AMS stg via FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Set FTP Directory Based on Environment
+        id: set-env
+        run: |
+          if [ "${{ github.event.inputs.environment }}" == "staging" ]; then
+            echo "FTP_DIR=/staging/" >> $GITHUB_ENV
+          else
+            echo "FTP_DIR=/public_html/" >> $GITHUB_ENV
+          fi
+
+      - name: Deploy to FTP Server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./ # Change if needed
+          server-dir: ./ # Upload to selected environment folder
