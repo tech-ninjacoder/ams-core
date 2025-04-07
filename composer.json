@@ -9,7 +9,7 @@
   ],
   "license": "MIT",
   "require": {
-    "php": "^8.2",
+    "php": "^8.0",
     "ext-json": "*",
     "altek/eventually": "^2.0",
     "aws/aws-sdk-php": "^3.171",

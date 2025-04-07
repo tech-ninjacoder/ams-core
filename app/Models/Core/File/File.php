@@ -18,8 +18,7 @@ class File extends BaseModel
     protected $hidden = [
         'fileable_type', 'fileable_id'
     ];
-
-   public bool $enableLoggingModelsEvents = false;
+    public bool $enableLoggingModelsEvents = false;
 
     use FileRelationship, FileMethod, FileAttribute;
 }
