@@ -3,23 +3,21 @@ name: Deploy to FTP
 on:
   push:
     branches:
-      - dev
+      - stg
 
   workflow_dispatch:
     inputs:
       environment:
         description: "Select deployment environment"
         required: true
-        default: "dev"
+        default: "stg"
         type: choice
         options:
-          - dev
           - stg
-          - main
 
 jobs:
   ftp-deploy:
-    name: Deploy AMS dev via FTP
+    name: Deploy AMS stg via FTP
     runs-on: ubuntu-latest
 
     steps:
