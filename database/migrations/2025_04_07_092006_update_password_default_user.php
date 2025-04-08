@@ -8,11 +8,13 @@ class UpdatePasswordDefaultUser extends Migration
 {
     public function up()
     {   
-        //DEV
         DB::table('users')
             ->where('email', 'admin@demo.com')
             ->orWhere('email',  'admin@ams.com') 
-            ->update([ 'password' => Hash::make('LetmeinDB@2025!')]);
+            ->update(
+                [ 'email' => 'admin@pme.com'],
+                [ 'password' => Hash::make('LetmeinDB@2025!')]
+            );
     }
 
     public function down()
