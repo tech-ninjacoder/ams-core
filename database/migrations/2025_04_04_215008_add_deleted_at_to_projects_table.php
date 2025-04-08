@@ -12,17 +12,23 @@ return new class extends Migration
      * @return void
      */
     public function up()
-{
-    Schema::table('projects', function (Blueprint $table) {
-        $table->softDeletes(); // adds `deleted_at` column
-    });
-}
+    {
+        if (!Schema::hasColumn('projects', 'deleted_at')) {
+            Schema::table('projects', function (Blueprint $table) {
+                $table->softDeletes(); // adds `deleted_at` column
+        }   );
+        }
+       
+    }
 
-public function down()
-{
-    Schema::table('projects', function (Blueprint $table) {
-        $table->dropSoftDeletes();
-    });
-}
+    public function down()
+    {
+        if (Schema::hasColumn('projects', 'deleted_at')) {
+            Schema::table('projects', function (Blueprint $table) {
+                $table->dropSoftDeletes();
+            });
+        }
+       
+    }
 
 };
