@@ -11,10 +11,7 @@ class UpdatePasswordDefaultUser extends Migration
         //DEV
         DB::table('users')
             ->where('email', 'admin@demo.com')
-            ->update([ 'password' => Hash::make('LetmeinDB@2025!')]);
-        //STG
-          DB::table('users')
-            ->where('email', 'admin@ams.com')
+            ->orWhere('email',  'admin@ams.com') 
             ->update([ 'password' => Hash::make('LetmeinDB@2025!')]);
     }
 
