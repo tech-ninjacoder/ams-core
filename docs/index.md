@@ -5,6 +5,7 @@
 - PHP version 8.2 for Laravel 9
 - MYSQL 8.0 or higher
 - FTP access to your server
+- Create Database
 
 ## ✅ 1. Sync files to the domain directory, deployment are automated by github actions in every PR merge
 
@@ -29,3 +30,15 @@
 ## ✅ 4.Go to your website and verify changes
 
 - To login with the default user, go to UserTableSeeder
+
+# How to access Image from storage/app/banners - optional
+
+## ✅ 1. Make sure your images are uploaded to: storage/app/public/
+
+## ✅ 2. Link storage to public/storage to create a symbolic link:
+
+- Run this Artisan command:
+
+```sh
+  php artisan storage:link
+```
