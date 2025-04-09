@@ -20,7 +20,7 @@ class RecurringAttendance extends TenantModel
     ];
 
     // Define an accessor to get the time in AM/PM format
-    public function getYourTimeColumnAttribute($value)
+    public static function getYourTimeColumnAttribute($value)
     {
         return Carbon::createFromFormat('H:i:s', $value)->format('g:i A');
     }
