@@ -21,8 +21,8 @@ class SanitizerHelper
     public function generateSanitizer($data)
     {
         $type = gettype($data) == 'integer' ? 'int' : gettype($data);
-        if($type === "string")
-            return filter_id("special_chars");
+        if($type === 'string')
+            return filter_id('special_chars');
         else
             return filter_id($type);
     }
