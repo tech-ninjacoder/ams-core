@@ -15,7 +15,7 @@
     {{ style(mix('css/core.css')) }}
     {{ style(mix('css/fontawesome.css')) }}
     {{ style(mix('css/dropzone.css')) }}
-    {{ style('vendor/summernote/summernote-bs4.css') }}
+    {{ style('summernote/dist/summernote-bs4.css') }}
     @stack('after-styles')
 </head>
 <body>
@@ -66,7 +66,7 @@
 {!! script(mix('js/manifest.js')) !!}
 {!! script(mix('js/vendor.js')) !!}
 {!! script(mix('js/core.js')) !!}
-{!! script('vendor/summernote/summernote-bs4.js') !!}
+{!! script('summernote/dist/summernote-bs4.js') !!}
 @stack('after-scripts')
 </body>
 </html>
