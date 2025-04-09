@@ -6,7 +6,7 @@ namespace App\Helpers\Core\General;
 class SanitizerHelper
 {
     /**
-     * @param $value - TO FIX FITER_SANITIZE_STRING deprecated in PHP 8.1
+     * @param $value
      * @return mixed
      */
     public function filterData($value)
