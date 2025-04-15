@@ -25,15 +25,19 @@ return new class extends Migration
             $table->foreign('gate_passe_type_id')->references('id')->on('gate_passe_types');
         });
 
-        DB::table('gate_passe_types')->updateOrInsert(
-            ['id' => 1], // condition
-            [
+        $exists = DB::table('gate_passe_types')
+        ->where('id', 1)
+        ->exists();
+
+        if (!$exists) {
+            DB::table('gate_passe_types')->insert([
+                'id' => 1,
                 'name' => 'Default Pass',
                 'description' => 'Default Pass Type',
                 'created_at' => now(),
                 'updated_at' => now()
-            ] // values to insert/update
-        );
+            ]);  // values to insert
+        }
     }
 
     /**
