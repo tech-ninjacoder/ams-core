@@ -13,7 +13,7 @@ return new class extends Migration
     public function up()
     {
         DB::statement("
-            ALTER TABLE gate_pass_user
+            ALTER TABLE skill_user
             MODIFY start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         ");
     }
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-       DB::statement("
-            ALTER TABLE gate_pass_user
+        DB::statement("
+            ALTER TABLE skill_user
             MODIFY start_date TIMESTAMP NULL DEFAULT NULL
         ");
     }
