@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use Illuminate\Support\Facades\DB;
 return new class extends Migration
 {
     /**
@@ -23,6 +24,16 @@ return new class extends Migration
             // Step 3: Re-add the foreign key
             $table->foreign('gate_passe_type_id')->references('id')->on('gate_passe_types');
         });
+
+        DB::table('gate_passe_types')->updateOrInsert(
+            ['id' => 1], // condition
+            [
+                'name' => 'Default Pass',
+                'description' => 'Default Pass Type',
+                'created_at' => now(),
+                'updated_at' => now()
+            ] // values to insert/update
+        );
     }
 
     /**
